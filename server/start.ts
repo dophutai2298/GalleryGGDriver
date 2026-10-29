@@ -7,7 +7,7 @@ import { nodeMiddleware } from './node-adapter.ts'
 
 const gallery = nodeMiddleware(createGalleryHandler(readGalleryConfig(process.env)))
 const root = resolve('dist')
-const contentTypes: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' }
+const contentTypes: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.ttf': 'font/ttf' }
 
 const server = createServer(async (req, res) => {
   if (req.url?.startsWith('/api/')) { await gallery(req, res); return }

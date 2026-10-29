@@ -2,6 +2,8 @@
 
 Gallery ảnh công khai bằng React, TypeScript và Vite, lấy ảnh từ một folder Google Drive và toàn bộ folder con. Giao diện tiếng Việt có sáng/tối, breadcrumb, tìm tên file toàn thư viện, phân trang, lightbox và tải ảnh gốc. Không có đăng nhập hoặc cơ sở dữ liệu.
 
+Font DM Sans và Playfair Display được phục vụ từ `public/fonts/`, có bộ ký tự tiếng Việt và giấy phép OFL đi kèm. Trình duyệt không cần gọi Google Fonts khi mở trang.
+
 ## Chạy với Google Drive thật
 
 Yêu cầu Node.js 24 trở lên.

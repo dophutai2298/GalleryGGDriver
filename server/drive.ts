@@ -89,7 +89,7 @@ export function createDriveClient(config: GalleryConfig) {
     },
     async listFiles(id: string, pageToken?: string, fresh = false): Promise<DrivePage> {
       const params: Record<string, string> = {
-        q: `'${id}' in parents and trashed = false and (mimeType = '${FOLDER_MIME}' or mimeType = 'image/jpeg' or mimeType = 'image/png' or mimeType = 'image/webp')`,
+        q: `'${id}' in parents and trashed = false and (${[FOLDER_MIME, ...IMAGE_MIMES].map((mime) => `mimeType = '${mime}'`).join(' or ')})`,
         fields: `nextPageToken,incompleteSearch,files(${fields})`,
         pageSize: '1000',
         orderBy: 'folder,name_natural',
