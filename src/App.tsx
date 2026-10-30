@@ -14,7 +14,7 @@ import {
 } from "@phosphor-icons/react";
 import { AlbumFolders, AlbumTabs } from "./AlbumNavigation";
 import { BackToTop } from "./BackToTop";
-import { Brand, BrandMark } from "./Brand";
+import { Brand } from "./Brand"; // BrandMark
 import { GalleryCard } from "./GalleryCard";
 import { Lightbox } from "./Lightbox";
 import { useAlbums } from "./useAlbums";

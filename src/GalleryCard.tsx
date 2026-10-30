@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowClockwiseIcon, ArrowUpRightIcon } from "@phosphor-icons/react";
-import { formatAlbumLocation } from "./album-location";
+// import { formatAlbumLocation } from "./album-location";
 import type { GalleryPhoto } from "./gallery-types";
 
 export function GalleryCard({
