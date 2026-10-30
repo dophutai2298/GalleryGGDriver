@@ -16,7 +16,15 @@ export function createFakeDrive(options: { localDownloads?: boolean; delay?: num
     { id: 'outside', name: 'Folder ngoài thư viện', mimeType: folderMime },
     { id: 'outside-image', name: 'Không được xem.jpg', mimeType: 'image/jpeg', parents: ['outside'], thumbnailLink: 'https://lh3.googleusercontent.com/fixture/outside=s220' },
   ]
-  if (options.localDownloads) for (const file of files) if (file.webContentLink) file.webContentLink = '/images/gallery-cover.png'
+  if (options.localDownloads) {
+    // Browser fixtures cover albums beyond the first root page and paginated album photos.
+    files.push(
+      { id: 'late-album', name: 'Lễ thành hôn', mimeType: folderMime, parents: ['root'] },
+      { id: 'sea-missing', name: 'Ảnh thiếu thumbnail.png', mimeType: 'image/png', parents: ['sea'] },
+      { id: 'celebration', name: 'Ngày vui.jpg', mimeType: 'image/jpeg', parents: ['sea'], thumbnailLink: 'https://lh3.googleusercontent.com/fixture/celebration=s220', imageMediaMetadata: { width: 1024, height: 1536 } },
+    )
+    for (const file of files) if (file.webContentLink) file.webContentLink = '/images/gallery-cover.png'
+  }
   const calls: URL[] = []
   let rootRequests = 0
   const fakeFetch: typeof fetch = async (input) => {
@@ -31,7 +39,7 @@ export function createFakeDrive(options: { localDownloads?: boolean; delay?: num
     const id = url.pathname.split('/')[4]
     if (id) {
       if (id === 'root' && options.rootFailureCycle) {
-        const step = rootRequests++ % 3
+        const step = rootRequests++
         if (step < 2) return Response.json({}, { status: step === 0 ? 500 : 429 })
       }
       const file = files.find((item) => item.id === id)
