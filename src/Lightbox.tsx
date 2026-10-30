@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowLeftIcon, ArrowRightIcon, DownloadSimpleIcon, XIcon } from '@phosphor-icons/react'
+import { formatAlbumLocation } from './album-location'
 import { GalleryApiError, getGalleryJson } from './gallery-api'
 import type { GalleryPhoto } from './gallery-types'
 
@@ -65,7 +66,7 @@ export function Lightbox({ photo, index, count, close, previous, next }: {
           {imageState === 'loading' && <p className="image-message" role="status">Đang tải ảnh…</p>}
           {imageState === 'failed' && <div className="image-message" role="status"><p>Ảnh xem trước chưa khả dụng.</p><button className="download-button" onClick={() => { setAttempt((value) => value + 1); setImageState('loading') }}>Thử tải lại ảnh</button></div>}
         </div>
-        <div className="lightbox-caption"><div><span>{photo.location.slice(1).map((folder) => folder.name).join(' / ') || 'Album cưới'}</span><h2 id="lightbox-title">{photo.name}</h2>{downloadError && <p className="download-error" role="alert">{downloadError}</p>}</div><button className="download-button" aria-disabled={downloading} aria-busy={downloading} onClick={() => void download()}>{downloading ? 'Đang chuẩn bị…' : 'Tải ảnh gốc'} <DownloadSimpleIcon size={20} aria-hidden="true" /></button></div>
+        <div className="lightbox-caption"><div><span>{formatAlbumLocation(photo.location)}</span><h2 id="lightbox-title">{photo.name}</h2>{downloadError && <p className="download-error" role="alert">{downloadError}</p>}</div><button className="download-button" aria-disabled={downloading} aria-busy={downloading} onClick={() => void download()}>{downloading ? 'Đang chuẩn bị…' : 'Tải ảnh gốc'} <DownloadSimpleIcon size={20} aria-hidden="true" /></button></div>
       </div>
       <button className="lightbox-arrow next" onClick={next} aria-label="Ảnh tiếp theo" disabled={count < 2}><ArrowRightIcon size={22} aria-hidden="true" /></button>
       <div className="lightbox-count" aria-live="polite">{String(index + 1).padStart(2, '0')} <span>/</span> {String(count).padStart(2, '0')}</div>

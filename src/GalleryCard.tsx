@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ArrowClockwiseIcon, ArrowUpRightIcon } from '@phosphor-icons/react'
+import { formatAlbumLocation } from './album-location'
 import type { GalleryPhoto } from './gallery-types'
 
 export function GalleryCard({ photo, number, open }: { photo: GalleryPhoto; number: number; open: () => void }) {
@@ -16,7 +17,7 @@ export function GalleryCard({ photo, number, open }: { photo: GalleryPhoto; numb
         </button>
         {failed && <button className="image-retry" onClick={() => { setFailed(false); setAttempt((value) => value + 1) }} aria-label={`Tải lại ảnh ${photo.name}`}>Thử lại <ArrowClockwiseIcon size={16} aria-hidden="true" /></button>}
       </div>
-      <div className="photo-meta"><div><h3>{photo.name}</h3><span>{photo.location.slice(1).map((folder) => folder.name).join(' / ') || 'Album cưới'}</span></div><span className="photo-index" aria-hidden="true">{String(number).padStart(2, '0')}</span></div>
+      <div className="photo-meta"><div><h3>{photo.name}</h3><span>{formatAlbumLocation(photo.location)}</span></div><span className="photo-index" aria-hidden="true">{String(number).padStart(2, '0')}</span></div>
     </article>
   )
 }
