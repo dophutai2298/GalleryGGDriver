@@ -35,9 +35,34 @@ npm start
 - Link thumbnail ngắn hạn được lấy lại khi retry; ảnh không có thumbnail có ô báo riêng. Kích thước CDN là tối ưu theo khả năng Google hỗ trợ, không phải cam kết chất lượng ảnh gốc.
 - Các lỗi API, quota, mạng và media được đổi thành thông báo an toàn bằng tiếng Việt.
 
-Để triển khai serverless, dùng Fetch handler trong `server/serverless.ts`, đưa environment bindings phía server vào handler và route toàn bộ `/api/gallery` cùng các đường dẫn con tới function. Host static phục vụ `dist/`; không đưa mã server hoặc `.env` vào thư mục static. Có thể dùng `createGalleryHandler` trực tiếp cho adapter của nhà cung cấp. Dự án chưa chọn hoặc triển khai một nhà cung cấp cụ thể.
+Vercel phục vụ frontend từ `dist/` và phát hiện Node function tại `api/gallery.ts`. Function đọc environment variables phía server và dùng cùng gallery handler với local. `vercel.json` rewrite các đường dẫn ảnh dưới `/api/gallery/` về function này, giữ URL và query của request. Không đưa mã server hoặc `.env` vào thư mục static. Fetch handler trong `server/serverless.ts` vẫn có thể dùng cho host khác có environment bindings.
+
+`tsconfig.json` bật `rewriteRelativeImportExtensions` để function sau khi biên dịch import `.js` thay vì `.ts`. Frontend build thành công chưa đủ để xác nhận function khởi động được; khi kiểm tra đóng gói Vercel phải kiểm tra cả function output.
 
 Trước khi public, xác nhận giới hạn key tương thích với host, giới hạn lượt gọi/thời gian chạy ở host, quota Drive và chi phí thumbnail. Cache là tạm thời, Drive vẫn là nguồn dữ liệu chính.
+
+## Triển khai trên Vercel
+
+1. Deploy commit có cả `api/` và `vercel.json`. Đặt **Root Directory** là gốc repo, **Framework Preset** là Vite, Node.js **24.x**. Build command là `npm run build`, output directory là `dist`; cấu hình trong repo đã khai báo hai giá trị này.
+2. Đặt `GOOGLE_DRIVE_API_KEY` hoặc tên cũ `API_KEY_GOOGLE` trong Environment Variables phía server. Đặt `GOOGLE_DRIVE_ROOT_FOLDER_URL` hoặc `GOOGLE_DRIVE_ROOT_FOLDER_ID`; thêm `GOOGLE_DRIVE_ROOT_RESOURCE_KEY` nếu link yêu cầu. Không thêm tiền tố `VITE_`.
+3. Chọn đúng môi trường **Production** và/hoặc **Preview** cần dùng, sau đó **Redeploy** commit mới. Đổi env không cập nhật một deployment đã chạy. Function sẽ xuất hiện trong phần Functions của deployment.
+4. Kiểm tra URL deployment bằng lệnh sau; không cần gửi key lên trình duyệt hay truyền key cho script:
+
+```sh
+npm run check:live -- https://weeding-taitruc.vercel.app
+```
+
+Script kiểm tra HTML trang chính, JSON gallery, một thumbnail, preview và link tải ảnh gốc qua HTTP. Script không tải binary ảnh gốc; nó chỉ xem một số folder/ảnh đại diện, không kiểm kê toàn bộ Drive.
+
+| Kết quả | Ý nghĩa và bước xử lý |
+| --- | --- |
+| `/` trả 200 HTML, `/api/gallery` trả 200 JSON | Frontend và function đã được route đúng. |
+| 404 dạng text/HTML kèm `x-vercel-error: NOT_FOUND` | Vercel chưa tìm thấy function hoặc route. Kiểm tra commit deploy, Root Directory và function output. Thêm env không tạo ra route còn thiếu. |
+| 503 JSON với `NOT_CONFIGURED` | Function đã chạy nhưng thiếu key hoặc root folder hợp lệ trong env của deployment. Kiểm tra tên biến, môi trường và redeploy. |
+| 404 JSON với `NOT_FOUND` | Request đã tới gallery; nội dung không thuộc root, không tồn tại hoặc chưa được chia sẻ công khai. |
+| 502 JSON với `DRIVE_UNAVAILABLE` hoặc 429 với `RATE_LIMITED` | Routing đã hoạt động; kiểm tra Drive API, giới hạn key, chia sẻ folder hoặc quota. |
+
+Function chạy Node.js 24.x, giới hạn thời gian 60 giây. Các instance và cache có thể được tạo lại bất cứ lúc nào. Nếu dùng CLI để kiểm tra cách Vercel đóng gói, chạy `vercel pull` với project đã liên kết rồi `vercel build`; không commit `.vercel/`.
 
 ## Kiểm thử
 
@@ -61,4 +86,4 @@ npm run check:live
 
 `check:live` đọc một số folder, kiểm tra thumbnail và link tải. Script không tải binary ảnh gốc và không in key. Cần kiểm tra một lần trong trình duyệt trên host cuối cùng: mở folder, tìm ảnh, xem lightbox và tải ảnh gốc để xác nhận hành vi tải công khai của Drive.
 
-Tài liệu tham chiếu: [Drive files.list](https://developers.google.com/workspace/drive/api/reference/rest/v3/files/list), [Drive resource keys](https://developers.google.com/workspace/drive/api/guides/resource-keys), [Drive files](https://developers.google.com/workspace/drive/api/reference/rest/v3/files), [Vite static deploy](https://vite.dev/guide/static-deploy).
+Tài liệu tham chiếu: [Drive files.list](https://developers.google.com/workspace/drive/api/reference/rest/v3/files/list), [Drive resource keys](https://developers.google.com/workspace/drive/api/guides/resource-keys), [Drive files](https://developers.google.com/workspace/drive/api/reference/rest/v3/files), [Vite static deploy](https://vite.dev/guide/static-deploy), [Vercel Node functions](https://vercel.com/docs/functions/runtimes/node-js), [Vercel rewrites](https://vercel.com/docs/routing/rewrites), [TypeScript import rewriting](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-7.html#path-rewriting-for-relative-paths).

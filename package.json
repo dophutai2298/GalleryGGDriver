@@ -16,7 +16,7 @@
     "test": "npm run test:api && npm run test:browser"
   },
   "engines": {
-    "node": ">=24"
+    "node": "24.x"
   },
   "dependencies": {
     "react": "^19.1.0",
