@@ -10,6 +10,7 @@ export default defineConfig({
   projects: [
     { name: 'desktop', use: { browserName: 'chromium', viewport: { width: 1440, height: 1000 } } },
     { name: 'mobile', use: { browserName: 'chromium', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } },
+    { name: 'tablet', use: { browserName: 'chromium', viewport: { width: 834, height: 1112 }, isMobile: true, hasTouch: true } },
   ],
   webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {
     command: 'npm run dev:fixture -- --host 127.0.0.1 --port 5174 --strictPort',

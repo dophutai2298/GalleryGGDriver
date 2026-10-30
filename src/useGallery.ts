@@ -14,7 +14,7 @@ function failure(error: unknown) {
   return error instanceof GalleryApiError ? error : new GalleryApiError('NETWORK_ERROR', 'Không thể kết nối album ảnh. Kiểm tra kết nối mạng và thử lại nhé.')
 }
 
-export function useGallery(folder: string, query: string) {
+export function useGallery(folder: string, query: string, enabled = true) {
   const [data, setData] = useState<GalleryPage | null>(null)
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
@@ -27,10 +27,11 @@ export function useGallery(folder: string, query: string) {
     generation.current++
     const controller = new AbortController()
     moreRequest.current?.abort()
-    setLoading(true)
+    setLoading(enabled)
     setLoadingMore(false)
     setError(null)
     setData(null)
+    if (!enabled) return () => controller.abort()
     const timer = window.setTimeout(() => {
       void getGalleryJson<GalleryPage>(galleryUrl(folder, query), controller.signal)
         .then((page) => { if (!controller.signal.aborted) setData(page) })
@@ -38,7 +39,7 @@ export function useGallery(folder: string, query: string) {
         .finally(() => { if (!controller.signal.aborted) setLoading(false) })
     }, query.trim() ? 250 : 0)
     return () => { window.clearTimeout(timer); controller.abort(); moreRequest.current?.abort() }
-  }, [folder, query, revision])
+  }, [folder, query, revision, enabled])
 
   const loadMore = useCallback(async () => {
     if (!data?.nextCursor || loadingMore) return
@@ -62,5 +63,5 @@ export function useGallery(folder: string, query: string) {
     }
   }, [data, folder, query, loadingMore])
 
-  return { data, loading, loadingMore, error, loadMore, reload: () => setRevision((value) => value + 1) }
+  return { data: enabled ? data : null, loading: enabled && loading, loadingMore, error: enabled ? error : null, loadMore, reload: () => setRevision((value) => value + 1) }
 }

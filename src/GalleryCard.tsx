@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ArrowClockwiseIcon, ArrowUpRightIcon } from '@phosphor-icons/react'
 import type { GalleryPhoto } from './gallery-types'
 
 export function GalleryCard({ photo, number, open }: { photo: GalleryPhoto; number: number; open: () => void }) {
@@ -11,12 +12,11 @@ export function GalleryCard({ photo, number, open }: { photo: GalleryPhoto; numb
         <button className="photo-select" onClick={open} aria-label={`Mở ảnh ${photo.name}`}>
           {!failed && <img className="gallery-image" src={`${photo.thumbnailUrl}?retry=${attempt}`} alt={photo.name} loading="lazy" decoding="async" onError={() => setFailed(true)} />}
           {failed && <span className="image-fallback">Không tải được ảnh</span>}
-          <span className="photo-open" aria-hidden="true">↗</span>
-          <span className="photo-number">{String(number).padStart(2, '0')}</span>
+          <span className="photo-open" aria-hidden="true"><ArrowUpRightIcon size={18} /></span>
         </button>
-        {failed && <button className="image-retry" onClick={() => { setFailed(false); setAttempt((value) => value + 1) }} aria-label={`Tải lại ảnh ${photo.name}`}>Thử lại ↻</button>}
+        {failed && <button className="image-retry" onClick={() => { setFailed(false); setAttempt((value) => value + 1) }} aria-label={`Tải lại ảnh ${photo.name}`}>Thử lại <ArrowClockwiseIcon size={16} aria-hidden="true" /></button>}
       </div>
-      <div className="photo-meta"><div><h3>{photo.name}</h3><span>{photo.location.map((folder) => folder.name).join(' / ')}</span></div>{photo.modifiedTime && <time dateTime={photo.modifiedTime}>{new Date(photo.modifiedTime).toLocaleDateString('vi-VN')}</time>}</div>
+      <div className="photo-meta"><div><h3>{photo.name}</h3><span>{photo.location.slice(1).map((folder) => folder.name).join(' / ') || 'Album cưới'}</span></div><span className="photo-index" aria-hidden="true">{String(number).padStart(2, '0')}</span></div>
     </article>
   )
 }

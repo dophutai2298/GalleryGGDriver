@@ -4,6 +4,14 @@ Gallery ảnh công khai bằng React, TypeScript và Vite, lấy ảnh từ m�
 
 Font DM Sans và Playfair Display được phục vụ từ `public/fonts/`, có bộ ký tự tiếng Việt và giấy phép OFL đi kèm. Trình duyệt không cần gọi Google Fonts khi mở trang.
 
+## Điều hướng album và giao diện
+
+Menu hiển thị các folder con trực tiếp của Drive root, theo thứ tự Drive trả về, và tự mở album đầu tiên. Danh sách album đọc đủ các trang của root; ảnh nằm ngay ở root không được đưa vào màn hình album mặc định. Tìm theo tên ảnh vẫn tìm trên toàn bộ cây gallery.
+
+Nút quay lại trên thanh điều hướng đưa khách từ album con về album trước, từ album cấp đầu về danh sách album; khi đang tìm kiếm, nút trở về album đang xem. Nút lên đầu trang cố định xuất hiện sau khi cuộn và ẩn trong lightbox. Các điều khiển chính có vùng chạm từ 44px; ô tìm kiếm dùng chữ 16px và bố cục thích ứng điện thoại, tablet, desktop. Hai giao diện sáng/tối dùng chung hệ màu.
+
+Logo hoa sen và các icon dùng Phosphor. Favicon được xuất từ cùng icon `FlowerLotus` dạng duotone; giấy phép MIT của asset ở `public/icon-LICENSE.txt`.
+
 ## Chạy với Google Drive thật
 
 Yêu cầu Node.js 24 trở lên.
