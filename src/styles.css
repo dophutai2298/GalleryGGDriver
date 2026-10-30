@@ -28,6 +28,7 @@
   --accent-ink: #241f1a;
   --soft: #2a2b26;
 }
+:root[data-theme='dark'] .brand-ampersand { color: #fff; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-height) + 20px); }
 body { margin: 0; min-width: 320px; background: var(--page); color: var(--ink); font-size: 16px; line-height: 1.5; }
