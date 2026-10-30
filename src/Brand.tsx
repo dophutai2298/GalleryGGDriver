@@ -1,7 +1,5 @@
-import { FlowerLotusIcon } from '@phosphor-icons/react'
-
 export function BrandMark() {
-  return <span className="brand-mark" aria-hidden="true"><FlowerLotusIcon size={28} weight="duotone" /></span>
+  return <span className="brand-mark" aria-hidden="true"><span className="brand-monogram" /></span>
 }
 
 export function Brand() {

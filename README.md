@@ -10,7 +10,7 @@ Menu hiển thị các folder con trực tiếp của Drive root, theo thứ t�
 
 Nút quay lại trên thanh điều hướng đưa khách từ album con về album trước, từ album cấp đầu về danh sách album; khi đang tìm kiếm, nút trở về album đang xem. Nút lên đầu trang cố định xuất hiện sau khi cuộn và ẩn trong lightbox. Các điều khiển chính có vùng chạm từ 44px; ô tìm kiếm dùng chữ 16px và bố cục thích ứng điện thoại, tablet, desktop. Hai giao diện sáng/tối dùng chung hệ màu.
 
-Logo hoa sen và các icon dùng Phosphor. Favicon được xuất từ cùng icon `FlowerLotus` dạng duotone; giấy phép MIT của asset ở `public/icon-LICENSE.txt`.
+Logo và favicon dùng hai chữ T lồng nhau, lấy nét chữ từ Playfair Display đang có trong dự án (giấy phép ở `public/fonts/Playfair-Display-LICENSE.txt`). Logo đổi màu theo giao diện sáng/tối; favicon theo giao diện trình duyệt. Các icon chức năng dùng Phosphor, giấy phép MIT ở `public/icon-LICENSE.txt`.
 
 ## Chạy với Google Drive thật
 

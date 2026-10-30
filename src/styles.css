@@ -48,6 +48,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .topbar { position: sticky; top: 0; z-index: 20; height: var(--nav-height); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px; background: var(--page); border-bottom: 1px solid var(--line); }
 .brand { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; font: 600 25px/1.2 'Playfair Display', Georgia, serif; letter-spacing: -.04em; }
 .brand-mark { display: inline-grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--accent-soft); color: var(--accent); }
+.brand-monogram { display: block; width: 100%; height: 100%; background: currentColor; mask: url('/monogram.svg') center / contain no-repeat; }
 .brand-ampersand { color: var(--accent); font-style: italic; }
 .top-links { display: none; }
 .top-actions { display: flex; align-items: center; gap: 8px; }
