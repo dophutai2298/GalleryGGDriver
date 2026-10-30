@@ -24,7 +24,7 @@ export function createGalleryHandler(config: GalleryConfig) {
       if (parsed.scope !== encodeURIComponent(scope) || typeof parsed.position !== 'string') throw new Error()
       return parsed.position
     } catch {
-      throw new GalleryError(400, 'INVALID_CURSOR', 'Trang ảnh không hợp lệ. Vui lòng tải lại folder.')
+      throw new GalleryError(400, 'INVALID_CURSOR', 'Trang ảnh không hợp lệ. Vui lòng tải lại album.')
     }
   }
 
@@ -33,7 +33,7 @@ export function createGalleryHandler(config: GalleryConfig) {
   }
 
   function validId(value: string) {
-    if (!/^[A-Za-z0-9_-]{1,200}$/.test(value)) throw new GalleryError(400, 'INVALID_REQUEST', 'Đường dẫn thư viện không hợp lệ.')
+    if (!/^[A-Za-z0-9_-]{1,200}$/.test(value)) throw new GalleryError(400, 'INVALID_REQUEST', 'Đường dẫn album không hợp lệ.')
     return value
   }
 
@@ -78,7 +78,7 @@ export function createGalleryHandler(config: GalleryConfig) {
   async function pathTo(id: string, fresh = false): Promise<DriveFile[]> {
     validId(id)
     const root = await drive.getFile(config.rootFolderId, fresh)
-    if (root.mimeType !== FOLDER_MIME || root.trashed) throw new GalleryError(404, 'NOT_FOUND', 'Folder thư viện không khả dụng.')
+    if (root.mimeType !== FOLDER_MIME || root.trashed) throw new GalleryError(404, 'NOT_FOUND', 'Album không khả dụng.')
     if (id === root.id) return [root]
     const known = paths.get(id)
     if (known) {
@@ -98,7 +98,7 @@ export function createGalleryHandler(config: GalleryConfig) {
       const verified = await verifyPath(root, discovered, fresh)
       if (verified) return verified
     }
-    throw new GalleryError(404, 'NOT_FOUND', 'Không tìm thấy nội dung trong thư viện này.')
+    throw new GalleryError(404, 'NOT_FOUND', 'Không tìm thấy ảnh trong album này.')
   }
 
   function photo(file: DriveFile, location: { id: string; name: string }[]): GalleryPhoto {
@@ -205,7 +205,7 @@ export function createGalleryHandler(config: GalleryConfig) {
       }
       const path = await pathTo(url.searchParams.get('folder') || config.rootFolderId, true)
       const folder = path[path.length - 1]
-      if (folder.mimeType !== FOLDER_MIME) throw new GalleryError(404, 'NOT_FOUND', 'Folder thư viện không khả dụng.')
+      if (folder.mimeType !== FOLDER_MIME) throw new GalleryError(404, 'NOT_FOUND', 'Album không khả dụng.')
       const breadcrumbs = path.map(({ id, name }) => ({ id, name }))
       const token = readCursor(url.searchParams.get('cursor'), `folder:${folder.id}`)
       const page = await drive.listFiles(folder.id, token, true)
@@ -219,7 +219,7 @@ export function createGalleryHandler(config: GalleryConfig) {
       }
       return Response.json(body, { headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } })
     } catch (error) {
-      const safe = error instanceof GalleryError ? error : new GalleryError(502, 'DRIVE_UNAVAILABLE', 'Không thể kết nối thư viện. Vui lòng thử lại.')
+      const safe = error instanceof GalleryError ? error : new GalleryError(502, 'DRIVE_UNAVAILABLE', 'Chưa thể kết nối album ảnh. Vui lòng thử lại.')
       return Response.json({ error: { code: safe.code, message: safe.message } }, { status: safe.status, headers: { 'Cache-Control': 'no-store', ...(safe.status === 429 ? { 'Retry-After': '60' } : {}) } })
     }
   }

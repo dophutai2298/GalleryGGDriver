@@ -9,7 +9,7 @@ export async function getGalleryJson<T>(url: string, signal?: AbortSignal): Prom
   const response = await fetch(url, { signal, cache: 'no-store' })
   if (!response.ok) {
     const body = await response.json().catch(() => null) as GalleryFailure | null
-    throw new GalleryApiError(body?.error?.code ?? 'UNAVAILABLE', body?.error?.message ?? 'Không thể tải thư viện. Vui lòng thử lại.')
+    throw new GalleryApiError(body?.error?.code ?? 'UNAVAILABLE', body?.error?.message ?? 'Không thể tải album ảnh. Vui lòng thử lại.')
   }
   return response.json() as Promise<T>
 }

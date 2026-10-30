@@ -11,7 +11,7 @@ function galleryUrl(folder: string, query: string, cursor?: string) {
 }
 
 function failure(error: unknown) {
-  return error instanceof GalleryApiError ? error : new GalleryApiError('NETWORK_ERROR', 'Không thể kết nối thư viện. Kiểm tra kết nối mạng và thử lại nhé.')
+  return error instanceof GalleryApiError ? error : new GalleryApiError('NETWORK_ERROR', 'Không thể kết nối album ảnh. Kiểm tra kết nối mạng và thử lại nhé.')
 }
 
 export function useGallery(folder: string, query: string) {
