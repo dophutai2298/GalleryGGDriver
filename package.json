@@ -5,14 +5,26 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "dev:fixture": "vite --mode fixture",
+    "build": "tsc -b && vite build && node --env-file-if-exists=.env scripts/check-client-secrets.mjs",
+    "preview": "vite preview",
+    "start": "node --env-file-if-exists=.env server/start.ts",
+    "typecheck": "tsc -b",
+    "test:api": "node --test tests/*.test.ts",
+    "test:browser": "node scripts/test-browser.mjs",
+    "check:live": "node --env-file-if-exists=.env scripts/check-live.mjs",
+    "test": "npm run test:api && npm run test:browser"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.7.0",
